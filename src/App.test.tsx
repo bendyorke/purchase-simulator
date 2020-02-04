@@ -1,6 +1,6 @@
 import React from 'react'
 import {act, render} from '@testing-library/react'
-import App, {dataToDomains, purchasesToData} from './App'
+import App, {pointToDomains, purchasesToPoint} from './App'
 import * as api from './purchases'
 
 test('logs the last purchase event on screen', done => {
@@ -20,30 +20,30 @@ test('logs the last purchase event on screen', done => {
 test('fires purchase events on load', done => {
   const listener = jest.fn()
   api.listen(listener)
-  render(<App delay={5} />)
+  render(<App delay={0} interval={12} />)
 
   setTimeout(() => {
     expect(listener).toHaveBeenCalled()
     done()
-  }, 10)
+  }, 20)
 })
 
-test('purchasesToData', () => {
+test('purchasesToPoint', () => {
   const purchases = [
     {ticker: 'btc', value: 1},
     {ticker: 'btc', value: 1},
   ]
 
-  const data = purchasesToData(purchases)
+  const data = purchasesToPoint(purchases)
 
   console.log('data', data)
 
   expect(data).toMatchObject({btc: 2})
 })
 
-test('dataToDomains', () => {
+test('pointToDomains', () => {
   const data = {btc: 10, eth: 5}
-  const domains = dataToDomains(data)
+  const domains = pointToDomains(data)
 
   expect(domains).toEqual(
     expect.arrayContaining([
