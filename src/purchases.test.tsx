@@ -14,7 +14,7 @@ test('gen falls back to default currencies', () => {
   expect(purchase.value).toBeLessThanOrEqual(purchases.MAX_VALUE)
 })
 
-test('dispatch dispatches a purchase event', (done) => {
+test('dispatch dispatches a purchase event', done => {
   const purchase = purchases.gen()
 
   const listener = event => {
@@ -23,12 +23,12 @@ test('dispatch dispatches a purchase event', (done) => {
     expect(json.purchase).toMatchObject(purchase)
   }
 
-  window.addEventListener("message", listener)
+  window.addEventListener('message', listener)
 
   purchases.dispatch(purchase)
 
   setTimeout(() => {
-    window.removeEventListener("message", listener)
+    window.removeEventListener('message', listener)
     done()
   }, 0)
 })
@@ -43,7 +43,7 @@ test('listen returns a function to stop listening', () => {
   expect(listener).not.toHaveBeenCalled()
 })
 
-test('listen listens for purchase events', (done) => {
+test('listen listens for purchase events', done => {
   const listener = jest.fn()
   const stop = purchases.listen(listener)
 
@@ -54,7 +54,7 @@ test('listen listens for purchase events', (done) => {
   }, 0)
 })
 
-test('stop stops dispatching purchase events', (done) => {
+test('stop stops dispatching purchase events', done => {
   const listener = jest.fn()
 
   purchases.start(1000)
@@ -69,7 +69,7 @@ test('stop stops dispatching purchase events', (done) => {
   }, 0)
 })
 
-test('start starts dispatching purchase events', (done) => {
+test('start starts dispatching purchase events', done => {
   const listener = jest.fn()
   const stop = purchases.listen(listener)
 

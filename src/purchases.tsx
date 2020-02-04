@@ -1,8 +1,8 @@
 import _ from 'lodash'
 
 export interface Purchase {
-  ticker: string;
-  value: number;
+  ticker: string
+  value: number
 }
 
 export const PURCHASE_MESSAGE = 'PURCHASE_MESSAGE'
@@ -16,7 +16,7 @@ let interval: number | null = null
  */
 export const gen = (currencies: string[] = DEFAULT_TICKERS): Purchase => {
   return {
-    ticker: _.sample(currencies) || "",
+    ticker: _.sample(currencies) || '',
     value: _.random(MAX_VALUE, true),
   }
 }
@@ -25,17 +25,20 @@ export const gen = (currencies: string[] = DEFAULT_TICKERS): Purchase => {
  * Dispatch a given purchase
  */
 export const dispatch = (purchase: Purchase): void => {
-  window.postMessage(JSON.stringify({
-    message: PURCHASE_MESSAGE,
-    purchase: purchase,
-  }), '*')
+  window.postMessage(
+    JSON.stringify({
+      message: PURCHASE_MESSAGE,
+      purchase: purchase,
+    }),
+    '*'
+  )
 }
 
 /**
  * Add a listener to be fired on perchase messages
  * Return a function to remove the listener
  */
-export const listen = (callback: (p: Purchase) => void): () => void => {
+export const listen = (callback: (p: Purchase) => void): (() => void) => {
   const eventListener = (event: any) => {
     try {
       const json = JSON.parse(event?.data)
@@ -43,14 +46,14 @@ export const listen = (callback: (p: Purchase) => void): () => void => {
       if (json?.message === PURCHASE_MESSAGE) {
         callback(json?.purchase)
       }
-    } catch(e) {
+    } catch (e) {
       console.error('could not parse event', {event, e})
     }
   }
 
-  window.addEventListener("message", eventListener)
+  window.addEventListener('message', eventListener)
 
-  return () => window.removeEventListener("message", eventListener)
+  return () => window.removeEventListener('message', eventListener)
 }
 
 /**

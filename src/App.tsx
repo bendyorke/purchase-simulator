@@ -10,8 +10,10 @@ const DEFAULT_DELAY = 500
  * Takes an array of purchases and returns a data instance for react-vis
  */
 export const purchasesToData = (purchases: api.Purchase[]) => {
-  const defaults : {[key: string]: number} = api.DEFAULT_TICKERS
-    .reduce((memo, name) => ({...memo, [name]: 0}), {})
+  const defaults: {[key: string]: number} = api.DEFAULT_TICKERS.reduce(
+    (memo, name) => ({...memo, [name]: 0}),
+    {}
+  )
 
   return purchases.reduce((memo, {ticker, value}) => {
     memo[ticker] = memo[ticker] + value
@@ -56,7 +58,7 @@ const usePurchaseStream = (delay: number) => {
   })
 }
 
-const App = ({delay = DEFAULT_DELAY}: {delay?: number;}) => {
+const App = ({delay = DEFAULT_DELAY}: {delay?: number}) => {
   const purchases: api.Purchase[] = useLivePurchases()
   usePurchaseStream(delay)
 
@@ -71,9 +73,7 @@ const App = ({delay = DEFAULT_DELAY}: {delay?: number;}) => {
 const LastPurchaseIndicator = ({purchases}: {purchases: api.Purchase[]}) => {
   const lastPurchase = purchases.slice(-1)[0] || {}
 
-  return (
-    <h1>{lastPurchase.ticker}!</h1>
-  )
+  return <h1>{lastPurchase.ticker}!</h1>
 }
 
 const PurchaseRadar = ({purchases}: {purchases: api.Purchase[]}) => {

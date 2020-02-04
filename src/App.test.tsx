@@ -3,7 +3,7 @@ import {act, render} from '@testing-library/react'
 import App, {dataToDomains, purchasesToData} from './App'
 import * as api from './purchases'
 
-test('logs the last purchase event on screen', (done) => {
+test('logs the last purchase event on screen', done => {
   const {getByText} = render(<App delay={1000} />)
   const purchase = api.gen()
 
@@ -17,7 +17,7 @@ test('logs the last purchase event on screen', (done) => {
   })
 })
 
-test('fires purchase events on load', (done) => {
+test('fires purchase events on load', done => {
   const listener = jest.fn()
   api.listen(listener)
   render(<App delay={5} />)
@@ -47,11 +47,9 @@ test('dataToDomains', () => {
 
   expect(domains).toEqual(
     expect.arrayContaining([
-      expect.objectContaining({name: 'btc', domain: [0, 10]})
+      expect.objectContaining({name: 'btc', domain: [0, 10]}),
     ])
   )
 })
 
-test.skip('graphs purchase events', () => {
-
-})
+test.skip('graphs purchase events', () => {})
