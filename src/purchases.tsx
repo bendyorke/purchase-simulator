@@ -1,23 +1,29 @@
 import _ from 'lodash'
 
-interface Purchase {
-  ticker: string | undefined;
+export interface Purchase {
+  ticker: string;
   value: number;
 }
 
 export const PURCHASE_MESSAGE = 'PURCHASE_MESSAGE'
 export const DEFAULT_TICKERS = ['btc', 'eth', 'ltc', 'ada', 'xrp', 'dsh']
-export const MAX_VALUE = 10
+export const MAX_VALUE = 50
 
 let interval: number | null = null
 
+/**
+ * Generate a random purchase event
+ */
 export const gen = (currencies: string[] = DEFAULT_TICKERS): Purchase => {
   return {
-    ticker: _.sample(currencies),
+    ticker: _.sample(currencies) || "",
     value: _.random(MAX_VALUE, true),
   }
 }
 
+/**
+ * Dispatch a given purchase
+ */
 export const dispatch = (purchase: Purchase): void => {
   window.postMessage(JSON.stringify({
     message: PURCHASE_MESSAGE,
@@ -25,6 +31,10 @@ export const dispatch = (purchase: Purchase): void => {
   }), '*')
 }
 
+/**
+ * Add a listener to be fired on perchase messages
+ * Return a function to remove the listener
+ */
 export const listen = (callback: (p: Purchase) => void): () => void => {
   const eventListener = (event: any) => {
     try {
@@ -43,14 +53,20 @@ export const listen = (callback: (p: Purchase) => void): () => void => {
   return () => window.removeEventListener("message", eventListener)
 }
 
+/**
+ * Start firing random puchases. Only one instance will run at a time
+ */
 export const start = (time: number): void => {
   if (!interval) {
     interval = window.setInterval(() => {
-      dispatch(gen())
+      if (interval) dispatch(gen())
     }, time)
   }
 }
 
+/**
+ * Stop firing purchases
+ */
 export const stop = (): void => {
   if (interval) {
     window.clearInterval(interval)
