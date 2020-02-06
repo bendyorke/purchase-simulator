@@ -4,17 +4,17 @@ import App, {pointToDomains, purchasesToPoint} from './App'
 import * as api from './purchases'
 
 test('logs the last purchase event on screen', done => {
-  const {getByText} = render(<App delay={1000} />)
+  const {getByText} = render(<App delay={1000} interval={0} />)
   const purchase = api.gen()
 
   api.stop()
-  act(() => api.dispatch(purchase))
+  act(() => api.dispatchPurchase(purchase))
 
   setTimeout(() => {
     const lastPurchaseElement = getByText(purchase.ticker + '!')
     expect(lastPurchaseElement).toBeInTheDocument()
     done()
-  })
+  }, 10)
 })
 
 test('fires purchase events on load', done => {
@@ -51,5 +51,3 @@ test('pointToDomains', () => {
     ])
   )
 })
-
-test.skip('graphs purchase events', () => {})

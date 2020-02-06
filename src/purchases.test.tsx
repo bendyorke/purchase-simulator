@@ -20,12 +20,12 @@ test('dispatch dispatches a purchase event', done => {
   const listener = event => {
     const json = JSON.parse(event.data)
     expect(json.message).toBe(purchases.PURCHASE_MESSAGE)
-    expect(json.purchase).toMatchObject(purchase)
+    expect(json.body).toMatchObject(purchase)
   }
 
   window.addEventListener('message', listener)
 
-  purchases.dispatch(purchase)
+  purchases.dispatchPurchase(purchase)
 
   setTimeout(() => {
     window.removeEventListener('message', listener)
@@ -38,7 +38,7 @@ test('listen returns a function to stop listening', () => {
   const stop = purchases.listen(listener)
 
   stop()
-  purchases.dispatch(purchases.gen())
+  purchases.dispatchPurchase(purchases.gen())
 
   expect(listener).not.toHaveBeenCalled()
 })

@@ -22,13 +22,20 @@ export const gen = (currencies: string[] = DEFAULT_TICKERS): Purchase => {
 }
 
 /**
- * Dispatch a given purchase
+ * Dispatched a purchase event
  */
-export const dispatch = (purchase: Purchase): void => {
+export const dispatchPurchase = (purchase: Purchase): void => {
+  dispatch<Purchase>(PURCHASE_MESSAGE, purchase)
+}
+
+/**
+ * Dispatches a generic event
+ */
+export const dispatch = <T extends unknown>(message: string, body: Purchase): void => {
   window.postMessage(
     JSON.stringify({
-      message: PURCHASE_MESSAGE,
-      purchase: purchase,
+      message: message,
+      body: body,
     }),
     '*'
   )
@@ -44,7 +51,7 @@ export const listen = (callback: (p: Purchase) => void): (() => void) => {
       const json = JSON.parse(event?.data)
 
       if (json?.message === PURCHASE_MESSAGE) {
-        callback(json?.purchase)
+        callback(json?.body)
       }
     } catch (e) {
       console.error('could not parse event', {event, e})
@@ -62,7 +69,7 @@ export const listen = (callback: (p: Purchase) => void): (() => void) => {
 export const start = (time: number): void => {
   if (!interval) {
     interval = window.setInterval(() => {
-      if (interval) dispatch(gen())
+      if (interval) dispatchPurchase(gen())
     }, time)
   }
 }
